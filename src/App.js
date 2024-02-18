@@ -20,11 +20,11 @@ const questions = [
 
 const correctAnswers = ["2", "4", "6", "8", "10"];
 const incorrectAnswers = [
-  ["1", "3", "5", "7"],
-  ["1", "3", "5", "7"],
-  ["1", "3", "5", "7"],
-  ["1", "3", "5", "7"],
-  ["1", "3", "5", "7"],
+  ["1", "3", "4", "5"],
+  ["2", "3", "5", "6"],
+  ["4", "5", "7", "8"],
+  ["6", "9", "7", "10"],
+  ["8", "9", "12", "15"],
 ];
 
 // Name input component
@@ -109,36 +109,33 @@ export default function App() {
   // Check answer handler
   const checkAnswer = () => {
     if (userInput) {
-      if (
-        userInput.toLowerCase() ===
-        correctAnswers[currentQuestion].toLowerCase()
-      ) {
+      if (userInput === correctAnswers[currentQuestion]) {
         setFeedback("Vastaus on oikein!");
         setScore(score + 20);
-      } else {
-        setFeedback("Vastaus on väärin!");
       }
+      else 
+        setFeedback("Vastaus on väärin!");
 
       setIsTimeoutActive(true);
       setTimeout(() => {
-        if (currentQuestion < questions.length - 1) {
+        if (currentQuestion < questions.length - 1) 
           setCurrentQuestion(currentQuestion + 1);
-        } else {
+        else 
           setCurrentQuestion(questions.length);
-        }
-        setUserInput("");
+
+        setUserInput();
         setFeedback("");
         setIsTimeoutActive(false);
       }, TIMEOUT_DURATION);
-    } else {
+    } 
+    else 
       setFeedback("Vastaus on tyhjä!");
-    }
   };
 
   // Retry quiz handler
   const retryQuiz = () => {
     setCurrentQuestion(0);
-    setUserInput("");
+    setUserInput();
     setFeedback("");
     setScore(0);
   };
