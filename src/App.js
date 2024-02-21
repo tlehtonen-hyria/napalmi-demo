@@ -1,30 +1,27 @@
 //TODO:
-// Connect to a DB
 // Leaderboards
-// Questions and answers from DB
 // Clean up code
 
 import React, { useState, useEffect } from "react";
-import "./App.css";
 
 // Constants
 const TIMEOUT_DURATION = 2000;
 
 const questions = [
-  "Kysymys 1 - Paljonko on 1 + 1?",
-  "Kysymys 2 - Paljonko on 2 + 2?",
-  "Kysymys 3 - Paljonko on 3 + 3?",
-  "Kysymys 4 - Paljonko on 4 + 4?",
-  "Kysymys 5 - Paljonko on 5 + 5?",
+  "Kysymys 1 - Paljonko on 1 + 2?",
+  "Kysymys 2 - Paljonko on 3 + 4?",
+  "Kysymys 3 - Paljonko on 5 + 6?",
+  "Kysymys 4 - Paljonko on 7 + 8?",
+  "Kysymys 5 - Paljonko on 9 + 10?",
 ];
 
-const correctAnswers = ["2", "4", "6", "8", "10"];
+const correctAnswers = ["3", "7", "11", "15", "19"];
 const incorrectAnswers = [
-  ["1", "3", "4", "5"],
-  ["2", "3", "5", "6"],
-  ["4", "5", "7", "8"],
-  ["6", "9", "7", "10"],
-  ["8", "9", "12", "15"],
+  ["1", "2", "4", "5"], // Kysymys 1, väärät
+  ["5", "6", "8", "9"], // Kysymys 2, väärät
+  ["9", "12", "13", "14"], // Kysymys 3, väärät
+  ["10", "13", "16", "18"], // Kysymys 4, väärät
+  ["18", "20", "22", "24"], // Kysymys 5, väärät
 ];
 
 // Name input component
@@ -65,8 +62,8 @@ export default function App() {
   const [playerName, setPlayerName] = useState("");
   const [shuffledAnswers, setShuffledAnswers] = useState([]);
 
-  // Reset radio input selection and shuffle answers when question changes
   useEffect(() => {
+
     // Shuffle answers function
     const shuffleAnswers = () => {
       setShuffledAnswers(
@@ -94,6 +91,12 @@ export default function App() {
       shuffleAnswers();
       setUserInput("");
     }
+    else {
+      if (score >= 20) {
+        submitScore(playerName, score);
+      }
+    }
+    
   }, [currentQuestion]);
 
   // Submit name handler
@@ -122,7 +125,6 @@ export default function App() {
           setCurrentQuestion(currentQuestion + 1);
         else 
           setCurrentQuestion(questions.length);
-
         setUserInput();
         setFeedback("");
         setIsTimeoutActive(false);
@@ -140,6 +142,24 @@ export default function App() {
     setScore(0);
   };
 
+  const submitScore = (playerName, score) => {
+    fetch("http://localhost:3001/score", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ player: playerName, score: score }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setFeedback("Pisteet tallennettu!");
+      })
+      .catch((error) => {
+        console.error("Error submitting score:", error);
+      });
+  };
+  
+
   return (
     <div>
       <center>
@@ -154,14 +174,14 @@ export default function App() {
                   <div key={index}>
                     <input
                       type="radio"
-                      id={`answer_${index}`}
+                      id={`vastaus_${index}`}
                       name="answers"
                       value={answer}
                       onChange={handleInputChange}
                       checked={userInput === answer}
                       disabled={isTimeoutActive}
                     />
-                    <label htmlFor={`answer_${index}`}>{answer}</label>
+                    <label htmlFor={`vastaus_${index}`}>{answer}</label>
                   </div>
                 ))}
 
@@ -174,6 +194,7 @@ export default function App() {
               </div>
             ) : (
               <div>
+                <p>{feedback}</p>
                 <h2>Tietovisa loppui!</h2>
                 <p>Pelaaja: {playerName}</p>
                 <p>Pisteet: {score}</p>
