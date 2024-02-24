@@ -30,6 +30,19 @@ app.post('/score', (req, res) => {
   });
 });
 
+app.get('/leaderboard', (req, res) => {
+  const sql = 'SELECT player, score FROM scores ORDER BY score DESC LIMIT 5';
+
+  pool.query(sql, (error, results) => {
+    if (error) {
+      console.error('Error fetching leaderboard', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
