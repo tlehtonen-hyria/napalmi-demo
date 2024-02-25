@@ -97,10 +97,8 @@ export default function App() {
       setUserInput();
     } else {
       // If all questions are answered, submit score and fetch leaderboard
-      if (score >= 20)
-        submitScore(playerName, score);
-      else
-        fetchLeaderboard();
+      if (score >= 20) submitScore(playerName, score);
+      else fetchLeaderboard();
     }
   }, [currentQuestion, playerName, score]);
 
@@ -117,7 +115,6 @@ export default function App() {
   // Check answer handler
   const checkAnswer = () => {
     if (userInput) {
-
       if (userInput === correctAnswers[currentQuestion]) {
         setFeedback("Vastaus on oikein!");
         setScore(score + 20);
@@ -127,8 +124,7 @@ export default function App() {
       setTimeout(() => {
         if (currentQuestion < questions.length - 1)
           setCurrentQuestion(currentQuestion + 1);
-        else 
-          setCurrentQuestion(questions.length);
+        else setCurrentQuestion(questions.length);
 
         setUserInput();
         setFeedback("");
@@ -220,7 +216,6 @@ export default function App() {
                 <p>Pelaaja: {playerName}</p>
                 <p className="player-score">Pisteet: {score}</p>
               </div>
-
             </div>
           ) : (
             <div>
@@ -235,7 +230,7 @@ export default function App() {
               <ol>
                 {leaderboard.map((entry, index) => (
                   <li key={index}>
-                    {entry.player} : {entry.score}
+                    {entry.player} - {entry.score} Pistettä
                   </li>
                 ))}
               </ol>
